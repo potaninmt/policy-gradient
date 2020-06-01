@@ -1,0 +1,9 @@
+C:\Users\Marat\Desktop\GitHub\policy-gradient\PolicyGradient\obj\Debug\PolicyGradient.csprojAssemblyReference.cache
+C:\Users\Marat\Desktop\GitHub\policy-gradient\PolicyGradient\obj\Debug\PolicyGradient.csproj.CoreCompileInputs.cache
+C:\Users\Marat\Desktop\GitHub\policy-gradient\PolicyGradient\bin\Debug\AI.dll
+C:\Users\Marat\Desktop\GitHub\policy-gradient\PolicyGradient\bin\Debug\AI.xml
+C:\Users\Marat\Desktop\GitHub\policy-gradient\PolicyGradient\obj\Debug\PolicyGradient.csproj.CopyComplete
+C:\Users\Marat\Desktop\GitHub\policy-gradient\PolicyGradient\bin\Debug\PolicyGradient.dll
+C:\Users\Marat\Desktop\GitHub\policy-gradient\PolicyGradient\bin\Debug\PolicyGradient.pdb
+C:\Users\Marat\Desktop\GitHub\policy-gradient\PolicyGradient\obj\Debug\PolicyGradient.dll
+C:\Users\Marat\Desktop\GitHub\policy-gradient\PolicyGradient\obj\Debug\PolicyGradient.pdb

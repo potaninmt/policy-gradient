@@ -1,0 +1,15 @@
+C:\Users\Marat\Desktop\GitHub\Environment_RL\Environment_RL\QLearning\bin\Debug\QLearning.dll
+C:\Users\Marat\Desktop\GitHub\Environment_RL\Environment_RL\QLearning\bin\Debug\QLearning.pdb
+C:\Users\Marat\Desktop\GitHub\Environment_RL\Environment_RL\QLearning\bin\Debug\AI.dll
+C:\Users\Marat\Desktop\GitHub\Environment_RL\Environment_RL\QLearning\bin\Debug\AI.DSP.dll
+C:\Users\Marat\Desktop\GitHub\Environment_RL\Environment_RL\QLearning\bin\Debug\AI.ML.dll
+C:\Users\Marat\Desktop\GitHub\Environment_RL\Environment_RL\QLearning\bin\Debug\netstandard.dll
+C:\Users\Marat\Desktop\GitHub\Environment_RL\Environment_RL\QLearning\bin\Debug\AI.pdb
+C:\Users\Marat\Desktop\GitHub\Environment_RL\Environment_RL\QLearning\bin\Debug\AI.DSP.pdb
+C:\Users\Marat\Desktop\GitHub\Environment_RL\Environment_RL\QLearning\bin\Debug\AI.ML.pdb
+C:\Users\Marat\Desktop\GitHub\Environment_RL\Environment_RL\QLearning\bin\Debug\AI.ML.xml
+C:\Users\Marat\Desktop\GitHub\Environment_RL\Environment_RL\QLearning\obj\Debug\QLearning.csprojAssemblyReference.cache
+C:\Users\Marat\Desktop\GitHub\Environment_RL\Environment_RL\QLearning\obj\Debug\QLearning.csproj.CoreCompileInputs.cache
+C:\Users\Marat\Desktop\GitHub\Environment_RL\Environment_RL\QLearning\obj\Debug\QLearning.csproj.CopyComplete
+C:\Users\Marat\Desktop\GitHub\Environment_RL\Environment_RL\QLearning\obj\Debug\QLearning.dll
+C:\Users\Marat\Desktop\GitHub\Environment_RL\Environment_RL\QLearning\obj\Debug\QLearning.pdb
