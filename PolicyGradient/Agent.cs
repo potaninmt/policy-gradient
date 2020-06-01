@@ -17,13 +17,20 @@ namespace PolicyGradient
     {
         List<Life> lifes;
 
-        public double averageScore { get; set; }
-        public int degreesOfFreedom { get; private set; }
+        double averageScore { get; set; }
+        int degreesOfFreedom { get; set; }
 
-        public NNW model;
-        public IGraph graphForward, graphBackward;
+        NNW model;
+        IGraph graphForward, graphBackward;
 
         Random random;
+
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        /// <param name="model">Модель нейронной сети</param>
+        /// <param name="degreesOfFreedom">Количество возможных действий</param>
+        /// <param name="random">Генератор рандома</param>
         public Agent(NNW model, int degreesOfFreedom, Random random)
         {
             lifes = new List<Life>();
@@ -51,6 +58,11 @@ namespace PolicyGradient
         /// <param name="action"></param>
         public void AddConditionToCurrentLife(State state, Action action)
         {
+            if (lifes.Count == 0)
+            {
+                lifes.Add(new Life());
+            }
+
             lifes.Last().Add(state, action);
         }
 
@@ -101,6 +113,10 @@ namespace PolicyGradient
         /// <param name="score"></param>
         public void UpdateScoreToCurrentLife(double score)
         {
+            if (lifes.Count == 0)
+            {
+                lifes.Add(new Life());
+            }
             lifes.Last().UpdateScore(score);
         }
 

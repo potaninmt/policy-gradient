@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PolicyGradient</name>
+    </assembly>
+    <members>
+        <member name="M:PolicyGradient.Agent.#ctor(AI.ML.NeuralNetwork.CoreNNW.Layers.NNW,System.Int32,System.Random)">
+            <summary>
+            Конструктор
+            </summary>
+            <param name="model">Модель нейронной сети</param>
+            <param name="degreesOfFreedom">Количество возможных действий</param>
+            <param name="random">Генератор рандома</param>
+        </member>
+        <member name="M:PolicyGradient.Agent.AddLife(PolicyGradient.Life)">
+            <summary>
+            Начать новую жизнь
+            </summary>
+            <param name="life"></param>
+        </member>
+        <member name="M:PolicyGradient.Agent.AddConditionToCurrentLife(PolicyGradient.State,PolicyGradient.Action)">
+            <summary>
+            Добавить state и action на текущей жизни
+            </summary>
+            <param name="state"></param>
+            <param name="action"></param>
+        </member>
+        <member name="M:PolicyGradient.Agent.GetCurrentLife">
+            <summary>
+            Вернуть текущую жизнь
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PolicyGradient.Agent.GetLife(System.Int32)">
+            <summary>
+            Получить i-тую жизнь
+            </summary>
+            <param name="index">индекс жизни</param>
+            <returns></returns>
+        </member>
+        <member name="M:PolicyGradient.Agent.GetAction(PolicyGradient.State)">
+            <summary>
+            Сгенерировать действие на воздействие(состояние среды)
+            </summary>
+            <param name="state"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PolicyGradient.Agent.UpdateScoreToCurrentLife(System.Double)">
+            <summary>
+            Обновить очки в текущей жизни
+            </summary>
+            <param name="score"></param>
+        </member>
+        <member name="M:PolicyGradient.Agent.UpdateScore(System.Int32,System.Double)">
+            <summary>
+            Обновить очки на i-той жизни
+            </summary>
+            <param name="index"></param>
+            <param name="score"></param>
+        </member>
+        <member name="M:PolicyGradient.Agent.GetScoreCurrentLife">
+            <summary>
+            Получить очки за текущую жизнь
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PolicyGradient.Agent.GetScore(System.Int32)">
+            <summary>
+            Получить очки на i-той жизни
+            </summary>
+            <param name="index">индекс жизни</param>
+            <returns></returns>
+        </member>
+        <member name="M:PolicyGradient.Agent.GetLifes">
+            <summary>
+            Получить лист жизней
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PolicyGradient.Agent.GetRewards">
+            <summary>
+            Получить знаковые оценки по всем прожитым жизням
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PolicyGradient.Agent.GetRewards(System.Int32,System.Int32)">
+            <summary>
+            Получить знаковые оценки по прожитым жизням [start; end)
+            </summary>
+            <param name="start"></param>
+            <param name="end"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PolicyGradient.Agent.Remove">
+            <summary>
+            Очистить список жизней
+            </summary>
+        </member>
+        <member name="M:PolicyGradient.Agent.Train(System.Int32,System.Int32,System.Double,AI.ML.NeuralNetwork.CoreNNW.TrainType,System.Double,AI.ML.NeuralNetwork.CoreNNW.Train.IOptimizer,AI.ML.NeuralNetwork.CoreNNW.Loss.ILoss)">
+            <summary>
+            Обучить нейронную сеть на накопленных исследованиях
+            </summary>
+            <param name="countLifes">На скольких жизней, начиная от последней, обучить модель</param>
+            <param name="epochs">Количество эпох обучения. По умолчанию 1</param>
+            <param name="learningRate">Норма обучения. По умолчанию 1e-3</param>
+            <param name="trainType">Тип обучения. По умолчанию online</param>
+            <param name="minLoss">ошибка, при которой обучение останавливается</param>
+            <param name="optimizer">Оптимизатор. По умолчанию Adam</param>
+            <param name="loss">Метрика ошибки. По умолчанию MSE</param>
+        </member>
+        <member name="M:PolicyGradient.Agent.SaveModel(System.String)">
+            <summary>
+            Сохранить модель нейронной сети
+            </summary>
+            <param name="path">путь к модели</param>
+        </member>
+        <member name="M:PolicyGradient.Agent.LoadModel(System.String)">
+            <summary>
+            Загрузить модель обученной нейронной сети
+            </summary>
+            <param name="path">путь до модели</param>
+        </member>
+    </members>
+</doc>
