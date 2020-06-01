@@ -19,6 +19,7 @@
   - ...
 
 # Демонстрация работы
+## Среда: https://github.com/AIFramework/Environment_RL
 [![](https://img.youtube.com/vi/Unocr5-pjGk/0.jpg)](https://www.youtube.com/watch?v=Unocr5-pjGk "Click to play on YouTube.com")
 
 # Контакты
