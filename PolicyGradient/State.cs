@@ -17,6 +17,11 @@ namespace PolicyGradient
             this.input = new NNValue(input);
         }
 
+        public State(Vector input)
+        {
+            this.input = new NNValue(input);
+        }
+
         public NNValue ToNNValue()
         {
             return input;

@@ -58,10 +58,6 @@ namespace PolicyGradient
         /// <param name="action"></param>
         public void AddConditionToCurrentLife(State state, Action action)
         {
-            if (lifes.Count == 0)
-            {
-                lifes.Add(new Life());
-            }
 
             lifes.Last().Add(state, action);
         }
@@ -90,7 +86,7 @@ namespace PolicyGradient
         /// </summary>
         /// <param name="state"></param>
         /// <returns></returns>
-        public Action GetAction(State state)
+        public Action GetAction(State state, bool IsRnd = true)
         {
             if(!(model.Layers.Last() is FeedForwardLayer))
             {
@@ -102,7 +98,7 @@ namespace PolicyGradient
                 var output = model.Activate(input, graphForward);
                 var vector = new Vector(output.DataInTensor);
 
-                return new Action(vector, random);
+                return new Action(vector, random, IsRnd);
             }
 
         }
@@ -113,10 +109,6 @@ namespace PolicyGradient
         /// <param name="score"></param>
         public void UpdateScoreToCurrentLife(double score)
         {
-            if (lifes.Count == 0)
-            {
-                lifes.Add(new Life());
-            }
             lifes.Last().UpdateScore(score);
         }
 
@@ -231,7 +223,7 @@ namespace PolicyGradient
             if (optimizer == null) optimizer = new Adam();
 
             int start = lifes.Count - countLifes;
-            Vector rewards = GetRewards(start, lifes.Count);
+            Vector rewards = GetRewards(start, start + lifes.Count);
             var inputs = new List<NNValue>();
             var outputs = new List<NNValue>();
 
@@ -243,15 +235,36 @@ namespace PolicyGradient
                     var state = condition.Item1;
                     var action = condition.Item2;
 
-                    inputs.Add(state.ToNNValue());
+                    
 
                     if (rewards[i] > 0)
                     {
-                        outputs.Add(new NNValue(action.probabilities.MaxOutVector().TransformVector(x => (x == -1) ? 0 : 1)));
+                        inputs.Add(state.ToNNValue());
+                        //outputs.Add(new NNValue(action.probabilities));
+
+                        Vector outp = new Vector(degreesOfFreedom);
+                        outp[(int)action.index] = 1.0;
+                        outputs.Add(new NNValue(outp));
+
+                        //outputs.Add(new NNValue(action.probabilities.MaxOutVector().TransformVector(x => (x == -1) ? 0 : 1)));
+
+                        //Vector p = action.probabilities;
+                        //outputs.Add(new NNValue(p));
                     }
                     else
                     {
-                        outputs.Add(new NNValue((1.0 - action.probabilities).MaxOutVector().TransformVector(x => (x == -1) ? 0 : 1)));
+                        inputs.Add(state.ToNNValue());
+
+                                //int u = 0;
+                                //while ((u = random.Next(0, degreesOfFreedom)) == action.index) ;
+                                //var index = action.index;
+                                //Vector outp = new Vector(degreesOfFreedom);// + 0.0;
+                                ////outp[index] = 0.0;
+                                //outp[u] = 1.0;
+                                //outputs.Add(new NNValue(outp));
+                        Vector p = 1.0 - action.probabilities;
+                        outputs.Add(new NNValue(p));
+                                //outputs.Add(new NNValue((1.0 - action.probabilities).MaxOutVector().TransformVector(x => (x == -1) ? 0 : 1)));
                     }
                 }
             }
@@ -274,7 +287,7 @@ namespace PolicyGradient
 
             #region Train
             DataSetNoReccurent dataSetNoReccurent = new DataSetNoReccurent(inputs.ToArray(), outputs.ToArray(), loss);
-            Trainer trainer = new Trainer(graphBackward, trainType, optimizer);
+            Trainer trainer = new Trainer(new GraphCPU(true), trainType, optimizer);
             trainer.Train(epochs, learningRate, model, dataSetNoReccurent, minLoss);
             #endregion
         }
