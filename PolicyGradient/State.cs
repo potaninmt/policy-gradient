@@ -3,6 +3,9 @@ using AI.ML.NeuralNetwork.CoreNNW;
 
 namespace PolicyGradient
 {
+    /// <summary>
+    /// Состояние агента
+    /// </summary>
     public class State
     {
         public NNValue input;

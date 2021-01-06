@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace PolicyGradient
 {
+    /// <summary>
+    /// Жизнь агента
+    /// </summary>
     public class Life
     {
         List<Tuple<State, Action>> pairs;

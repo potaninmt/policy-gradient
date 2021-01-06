@@ -16,6 +16,8 @@ namespace PolicyGradient
     public class Agent
     {
         List<Life> lifes;
+        Trainer trainer;
+        IOptimizer optimizer;
 
         double averageScore { get; set; }
         int degreesOfFreedom { get; set; }
@@ -31,15 +33,21 @@ namespace PolicyGradient
         /// <param name="model">Модель нейронной сети</param>
         /// <param name="degreesOfFreedom">Количество возможных действий</param>
         /// <param name="random">Генератор рандома</param>
-        public Agent(NNW model, int degreesOfFreedom, Random random)
+        public Agent(NNW model, int degreesOfFreedom, Random random, IOptimizer optimizer = null)
         {
             lifes = new List<Life>();
             graphForward = new GraphCPU(false);
             graphBackward = new GraphCPU(true);
-
             this.degreesOfFreedom = degreesOfFreedom;
             this.model = model;
             this.random = random;
+
+            if (optimizer == null)
+                optimizer = new Adam();
+
+            this.optimizer = optimizer;
+
+            trainer = new Trainer(graphBackward, TrainType.Online, optimizer);
         }
 
         /// <summary>
@@ -217,10 +225,9 @@ namespace PolicyGradient
         /// <param name="minLoss">ошибка, при которой обучение останавливается</param>
         /// <param name="optimizer">Оптимизатор. По умолчанию Adam</param>
         /// <param name="loss">Метрика ошибки. По умолчанию MSE</param>
-        public void Train(int countLifes = 50, int epochs = 1, double learningRate = 1e-3, TrainType trainType = TrainType.Online, double minLoss = 0.0, IOptimizer optimizer = null, ILoss loss = null)
+        public void Train(int countLifes = 50, int epochs = 1, double learningRate = 1e-3, TrainType trainType = TrainType.Online, double minLoss = 0.0, ILoss loss = null)
         {
             if (loss == null) loss = new LossMeanSqrSqrt();
-            if (optimizer == null) optimizer = new Adam();
 
             int start = lifes.Count - countLifes;
             Vector rewards = GetRewards(start, start + lifes.Count);
@@ -270,7 +277,7 @@ namespace PolicyGradient
             }
 
             #region Shuffle
-            for (int i = start; i < inputs.Count; i++)
+            for (int i = start; i < inputs.Count * 2; i++)
             {
                 var a = random.Next(start, inputs.Count);
                 var b = random.Next(start, inputs.Count);
@@ -287,7 +294,6 @@ namespace PolicyGradient
 
             #region Train
             DataSetNoReccurent dataSetNoReccurent = new DataSetNoReccurent(inputs.ToArray(), outputs.ToArray(), loss);
-            Trainer trainer = new Trainer(new GraphCPU(true), trainType, optimizer);
             trainer.Train(epochs, learningRate, model, dataSetNoReccurent, minLoss);
             #endregion
         }
