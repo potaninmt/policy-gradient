@@ -225,7 +225,7 @@ namespace PolicyGradient
         /// <param name="minLoss">ошибка, при которой обучение останавливается</param>
         /// <param name="optimizer">Оптимизатор. По умолчанию Adam</param>
         /// <param name="loss">Метрика ошибки. По умолчанию MSE</param>
-        public void Train(int countLifes = 50, int epochs = 1, double learningRate = 1e-3, TrainType trainType = TrainType.Online, double minLoss = 0.0, ILoss loss = null)
+        public void Train(int countLifes = 50, int epochs = 1, float learningRate = 1e-3f, TrainType trainType = TrainType.Online, float minLoss = 0.0f, ILoss loss = null)
         {
             if (loss == null) loss = new LossMeanSqrSqrt();
 
@@ -234,7 +234,7 @@ namespace PolicyGradient
             var inputs = new List<NNValue>();
             var outputs = new List<NNValue>();
 
-            for (int i = 0; i < rewards.N; i++)
+            for (int i = 0; i < rewards.Count; i++)
             {
                 var conditions = lifes[start+i].GetConditions();
                 foreach(var condition in conditions)
