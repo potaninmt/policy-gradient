@@ -4,30 +4,30 @@ using AI.ML.NeuralNetwork.CoreNNW;
 namespace PolicyGradient
 {
     /// <summary>
-    /// Состояние агента
+    /// Состояние среды
     /// </summary>
     public class State
     {
-        public NNValue input;
+        public NNValue Input { get; private set; }
 
         public State(Tensor input)
         {
-            this.input = new NNValue(input);
+            Input = new NNValue(input);
         }
 
         public State(Matrix input)
         {
-            this.input = new NNValue(input);
+            Input = new NNValue(input);
         }
 
         public State(Vector input)
         {
-            this.input = new NNValue(input);
+            Input = new NNValue(input);
         }
 
-        public NNValue ToNNValue()
+        public State(params double[] array)
         {
-            return input;
+            Input = new NNValue(array);
         }
     }
 }

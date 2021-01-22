@@ -18,9 +18,15 @@ namespace PolicyGradient
             this.IsRnd = IsRnd;
             this.index = SetAction(IsRnd);
         }
+
         public NNValue ToNNValue()
         {
             return new NNValue(probabilities);
+        }
+
+        public int GetAction()
+        {
+            return index;
         }
 
         private int SetAction(bool IsRnd)
@@ -33,22 +39,28 @@ namespace PolicyGradient
             }
             else
             {
-                while (true)
+                var p = random.NextDouble();
+                var values = probabilities / probabilities.Sum();
+
+                double sum = 0.0;
+                for (int i = 0; i < values.Count; i++)
                 {
-                    index = random.Next(0, probabilities.Count);
-                    if (random.NextDouble() > 1.0 - probabilities[index])
+                    values[i] = sum + values[i];
+                    sum += values[i];
+                }
+
+                for (int i = 0; i < values.Count; i++)
+                {
+                    var last = i == 0 ? -1e-8 : values[i - 1];
+                    if (p > last && p <= values[i])
                     {
+                        index = i;
                         return index;
                     }
                 }
+
+                throw new Exception("prob error");
             }
         }
-
-        public int GetAction()
-        {
-            return index;
-        }
-
-
     }
 }

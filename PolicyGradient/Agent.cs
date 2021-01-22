@@ -15,7 +15,7 @@ namespace PolicyGradient
 {
     public class Agent
     {
-        List<Life> lifes;
+        public List<Generation> Generations { get; private set; }
         Trainer trainer;
         IOptimizer optimizer;
 
@@ -35,7 +35,7 @@ namespace PolicyGradient
         /// <param name="random">Генератор рандома</param>
         public Agent(NNW model, int degreesOfFreedom, Random random, IOptimizer optimizer = null)
         {
-            lifes = new List<Life>();
+            Generations = new List<Generation>();
             graphForward = new GraphCPU(false);
             graphBackward = new GraphCPU(true);
             this.degreesOfFreedom = degreesOfFreedom;
@@ -51,42 +51,42 @@ namespace PolicyGradient
         }
 
         /// <summary>
-        /// Начать новую жизнь
+        /// Создать новое поколение
         /// </summary>
         /// <param name="life"></param>
-        public void AddLife(Life life)
+        public void CreateGeneration()
         {
-            lifes.Add(life);
+            Generations.Add(new Generation());
         }
 
         /// <summary>
-        /// Добавить state и action на текущей жизни
+        /// Добавить пару state, action для поколения
         /// </summary>
         /// <param name="state"></param>
         /// <param name="action"></param>
-        public void AddConditionToCurrentLife(State state, Action action)
+        public void AddCondition(State state, Action action)
         {
-
-            lifes.Last().Add(state, action);
+            var last = Generations.Last();
+            last.Add(state, action);
         }
 
         /// <summary>
-        /// Вернуть текущую жизнь
+        /// Вернуть текущее поколение
         /// </summary>
         /// <returns></returns>
-        public Life GetCurrentLife()
+        public Generation GetGeneration()
         {
-            return lifes.Last();
+            return Generations.Last();
         }
 
         /// <summary>
-        /// Получить i-тую жизнь
+        /// Получить i-ое поколение
         /// </summary>
-        /// <param name="index">индекс жизни</param>
+        /// <param name="index">индекс поколения</param>
         /// <returns></returns>
-        public Life GetLife(int index)
+        public Generation GetGeneration(int index)
         {
-            return lifes[index];
+            return Generations[index];
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace PolicyGradient
             }
             else
             {
-                var input = state.ToNNValue();
+                var input = state.Input;
                 var output = model.Activate(input, graphForward);
                 var vector = new Vector(output.DataInTensor);
 
@@ -115,9 +115,9 @@ namespace PolicyGradient
         /// Обновить очки в текущей жизни
         /// </summary>
         /// <param name="score"></param>
-        public void UpdateScoreToCurrentLife(double score)
+        public void SetScore(double score)
         {
-            lifes.Last().UpdateScore(score);
+            Generations.Last().SetScore(score);
         }
 
         /// <summary>
@@ -125,65 +125,42 @@ namespace PolicyGradient
         /// </summary>
         /// <param name="index"></param>
         /// <param name="score"></param>
-        public void UpdateScore(int index, double score)
+        public void SetScore(int index, double score)
         {
-            lifes[index].UpdateScore(score);
+            Generations[index].SetScore(score);
         }
 
         /// <summary>
-        /// Получить очки за текущую жизнь
+        /// Получить score последнего поколения
         /// </summary>
         /// <returns></returns>
-        public double GetScoreCurrentLife()
+        public double GetScore()
         {
-            return lifes.Last().GetScore();
+            return Generations.Last().GetScore();
         }
 
 
         /// <summary>
-        /// Получить очки на i-той жизни
+        /// Получить score i-того поколения
         /// </summary>
         /// <param name="index">индекс жизни</param>
         /// <returns></returns>
         public double GetScore(int index)
         {
-            return lifes[index].GetScore();
+            return Generations[index].GetScore();
         }
 
         /// <summary>
-        /// Получить лист жизней
-        /// </summary>
-        /// <returns></returns>
-        public List<Life> GetLifes()
-        {
-            return lifes;
-        }
-
-        /// <summary>
-        /// Получить знаковые оценки по всем прожитым жизням
+        /// Получить знаковые оценки по поколениям
         /// </summary>
         /// <returns></returns>
         public Vector GetRewards()
         {
-            List<double> scores = new List<double>();
-            foreach (var life in lifes)
-            {
-                scores.Add(life.GetScore());
-            }
-
-            var vec = new Vector(scores);
-
-            averageScore = scores.Average();
-
-            vec -= averageScore;
-
-            vec = vec.TransformVector(x => Math.Sign(x));
-
-            return vec;
+            return GetRewards(0, Generations.Count);
         }
 
         /// <summary>
-        /// Получить знаковые оценки по прожитым жизням [start; end)
+        /// Получить знаковые оценки поколений [start; end)
         /// </summary>
         /// <param name="start"></param>
         /// <param name="end"></param>
@@ -193,7 +170,7 @@ namespace PolicyGradient
             List<double> scores = new List<double>();
             for (int i = start; i < end; i++)
             {
-                scores.Add(lifes[i].GetScore());
+                scores.Add(Generations[i].GetScore());
             }
 
             var vec = new Vector(scores);
@@ -208,94 +185,90 @@ namespace PolicyGradient
         }
 
         /// <summary>
-        /// Очистить список жизней
+        /// Очистить список поколений
         /// </summary>
-        public void Remove()
+        public void Clear()
         {
-            lifes = new List<Life>();
+            Generations = new List<Generation>();
         }
 
         /// <summary>
         /// Обучить нейронную сеть на накопленных исследованиях
         /// </summary>
-        /// <param name="countLifes">На скольких жизней, начиная от последней, обучить модель</param>
+        /// <param name="countGenerations">На скольких жизней, начиная от последней, обучить модель</param>
         /// <param name="epochs">Количество эпох обучения. По умолчанию 1</param>
         /// <param name="learningRate">Норма обучения. По умолчанию 1e-3</param>
         /// <param name="trainType">Тип обучения. По умолчанию online</param>
         /// <param name="minLoss">ошибка, при которой обучение останавливается</param>
         /// <param name="optimizer">Оптимизатор. По умолчанию Adam</param>
         /// <param name="loss">Метрика ошибки. По умолчанию MSE</param>
-        public void Train(int countLifes = 50, int epochs = 1, float learningRate = 1e-3f, TrainType trainType = TrainType.Online, float minLoss = 0.0f, ILoss loss = null)
+        public void Train(int countGenerations = -1, int epochs = 1, float learningRate = 1e-3f, TrainType trainType = TrainType.Online, float minLoss = 0.0f, ILoss loss = null)
         {
             if (loss == null) loss = new LossMeanSqrSqrt();
+            if (countGenerations == -1) countGenerations = Generations.Count;
 
-            int start = lifes.Count - countLifes;
-            Vector rewards = GetRewards(start, start + lifes.Count);
+            int start = Generations.Count - countGenerations;
+            int end = start + countGenerations;
+            if (end > Generations.Count)
+                end = Generations.Count;
+            Vector rewards = GetRewards(start, end);
             var inputs = new List<NNValue>();
             var outputs = new List<NNValue>();
 
             for (int i = 0; i < rewards.Count; i++)
             {
-                var conditions = lifes[start+i].GetConditions();
+                var conditions = Generations[start+i].GetConditions();
                 foreach(var condition in conditions)
                 {
                     var state = condition.Item1;
                     var action = condition.Item2;
-
+                    double p = 0.01;
                     
 
                     if (rewards[i] > 0)
                     {
-                        inputs.Add(state.ToNNValue());
-                        //outputs.Add(new NNValue(action.probabilities));
+                        inputs.Add(state.Input);
 
                         Vector outp = new Vector(degreesOfFreedom);
-                        outp[(int)action.index] = 1.0;
+                        outp[action.index] = 1.0 - p;
                         outputs.Add(new NNValue(outp));
-
-                        //outputs.Add(new NNValue(action.probabilities.MaxOutVector().TransformVector(x => (x == -1) ? 0 : 1)));
-
-                        //Vector p = action.probabilities;
-                        //outputs.Add(new NNValue(p));
                     }
                     else
                     {
-                        inputs.Add(state.ToNNValue());
+                        inputs.Add(state.Input);
 
-                                //int u = 0;
-                                //while ((u = random.Next(0, degreesOfFreedom)) == action.index) ;
-                                //var index = action.index;
-                                //Vector outp = new Vector(degreesOfFreedom);// + 0.0;
-                                ////outp[index] = 0.0;
-                                //outp[u] = 1.0;
-                                //outputs.Add(new NNValue(outp));
-                        Vector p = 1.0 - action.probabilities;
-                        outputs.Add(new NNValue(p));
-                                //outputs.Add(new NNValue((1.0 - action.probabilities).MaxOutVector().TransformVector(x => (x == -1) ? 0 : 1)));
+                        int u = 0;
+                        while ((u = random.Next(0, degreesOfFreedom)) == action.index) ;
+                        Vector output = new Vector(degreesOfFreedom);
+                        output[u] = 1.0 - p;
+                        outputs.Add(new NNValue(output));
                     }
                 }
             }
 
-            #region Shuffle
-            for (int i = start; i < inputs.Count * 2; i++)
-            {
-                var a = random.Next(start, inputs.Count);
-                var b = random.Next(start, inputs.Count);
-                var temp1 = inputs[a];
-                var temp2 = outputs[a];
-
-                inputs[a] = inputs[b];
-                outputs[a] = outputs[b];
-
-                inputs[b] = temp1;
-                outputs[b] = temp2;
-            }
-            #endregion
+            Shuffle(inputs, outputs);
 
             #region Train
             DataSetNoReccurent dataSetNoReccurent = new DataSetNoReccurent(inputs.ToArray(), outputs.ToArray(), loss);
             trainer.Train(epochs, learningRate, model, dataSetNoReccurent, minLoss);
             #endregion
+        }
+
+        private void Shuffle(List<NNValue> inputs, List<NNValue> outputs)
+        {
+            var count = inputs.Count;
+            for (int i = count - 1; i > 0; i--)
+            {
+                var j = random.Next(0, i + 1);
+                NNValue t1 = inputs[i];
+                NNValue t2 = outputs[i];
+
+                inputs[i] = inputs[j];
+                outputs[i] = outputs[j];
+
+                inputs[j] = t1;
+                outputs[j] = t2;
+            }
         }
 
         /// <summary>

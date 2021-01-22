@@ -15,3 +15,14 @@ C:\Users\marat\Documents\GitHub\Repos\policy-gradient\PolicyGradient\obj\Debug\P
 C:\Users\marat\Documents\GitHub\Repos\policy-gradient\PolicyGradient\obj\Debug\PolicyGradient.csproj.CopyComplete
 C:\Users\marat\Documents\GitHub\Repos\policy-gradient\PolicyGradient\obj\Debug\PolicyGradient.dll
 C:\Users\marat\Documents\GitHub\Repos\policy-gradient\PolicyGradient\obj\Debug\PolicyGradient.pdb
+C:\Users\marat\source\repos\GitHub\Repos\policy-gradient\PolicyGradient\bin\Debug\PolicyGradient.xml
+C:\Users\marat\source\repos\GitHub\Repos\policy-gradient\PolicyGradient\bin\Debug\PolicyGradient.dll
+C:\Users\marat\source\repos\GitHub\Repos\policy-gradient\PolicyGradient\bin\Debug\PolicyGradient.pdb
+C:\Users\marat\source\repos\GitHub\Repos\policy-gradient\PolicyGradient\bin\Debug\AI.dll
+C:\Users\marat\source\repos\GitHub\Repos\policy-gradient\PolicyGradient\bin\Debug\AI.pdb
+C:\Users\marat\source\repos\GitHub\Repos\policy-gradient\PolicyGradient\bin\Debug\AI.xml
+C:\Users\marat\source\repos\GitHub\Repos\policy-gradient\PolicyGradient\obj\Debug\PolicyGradient.csprojAssemblyReference.cache
+C:\Users\marat\source\repos\GitHub\Repos\policy-gradient\PolicyGradient\obj\Debug\PolicyGradient.csproj.CoreCompileInputs.cache
+C:\Users\marat\source\repos\GitHub\Repos\policy-gradient\PolicyGradient\obj\Debug\PolicyGradient.csproj.CopyComplete
+C:\Users\marat\source\repos\GitHub\Repos\policy-gradient\PolicyGradient\obj\Debug\PolicyGradient.dll
+C:\Users\marat\source\repos\GitHub\Repos\policy-gradient\PolicyGradient\obj\Debug\PolicyGradient.pdb

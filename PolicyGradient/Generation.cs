@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 namespace PolicyGradient
 {
     /// <summary>
-    /// Жизнь агента
+    /// Поколение для агента
     /// </summary>
-    public class Life
+    public class Generation
     {
         List<Tuple<State, Action>> pairs;
         double score;
 
-        public Life()
+        public Generation()
         {
             pairs = new List<Tuple<State, Action>>();
         }
@@ -24,7 +24,7 @@ namespace PolicyGradient
             pairs.Add(new Tuple<State, Action>(state, action));
         }
 
-        public void UpdateScore(double score)
+        public void SetScore(double score)
         {
             this.score = score;
         }
