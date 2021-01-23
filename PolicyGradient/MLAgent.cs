@@ -16,15 +16,13 @@ namespace PolicyGradient
     public class MLAgent
     {
         public List<Generation> Generations { get; private set; }
-        Trainer trainer;
-        IOptimizer optimizer;
-
         double averageScore { get; set; }
         int degreesOfFreedom { get; set; }
 
+        Trainer trainer;
         NNW model;
         IGraph graphForward, graphBackward;
-
+        IOptimizer optimizer;
         Random random;
 
         /// <summary>
@@ -234,7 +232,7 @@ namespace PolicyGradient
                         outp[action.index] = 1.0 - p;
                         outputs.Add(new NNValue(outp));
                     }
-                    else
+                    else if(rewards[i] < 0)
                     {
                         inputs.Add(state.Input);
 
@@ -247,12 +245,15 @@ namespace PolicyGradient
                 }
             }
 
-            Shuffle(inputs, outputs);
+            if (inputs.Count > 0)
+            {
+                Shuffle(inputs, outputs);
 
-            #region Train
-            DataSetNoReccurent dataSetNoReccurent = new DataSetNoReccurent(inputs.ToArray(), outputs.ToArray(), loss);
-            trainer.Train(epochs, learningRate, model, dataSetNoReccurent, minLoss);
-            #endregion
+                #region Train
+                DataSetNoReccurent dataSetNoReccurent = new DataSetNoReccurent(inputs.ToArray(), outputs.ToArray(), loss);
+                trainer.Train(epochs, learningRate, model, dataSetNoReccurent, minLoss);
+                #endregion
+            }
         }
 
         private void Shuffle(List<NNValue> inputs, List<NNValue> outputs)
