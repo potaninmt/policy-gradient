@@ -13,7 +13,7 @@ using AI.ML.NeuralNetwork.CoreNNW.Train;
 
 namespace PolicyGradient
 {
-    public class Agent
+    public class MLAgent
     {
         public List<Generation> Generations { get; private set; }
         Trainer trainer;
@@ -33,7 +33,7 @@ namespace PolicyGradient
         /// <param name="model">Модель нейронной сети</param>
         /// <param name="degreesOfFreedom">Количество возможных действий</param>
         /// <param name="random">Генератор рандома</param>
-        public Agent(NNW model, int degreesOfFreedom, Random random, IOptimizer optimizer = null)
+        public MLAgent(NNW model, int degreesOfFreedom, Random random, IOptimizer optimizer = null)
         {
             Generations = new List<Generation>();
             graphForward = new GraphCPU(false);
@@ -93,8 +93,9 @@ namespace PolicyGradient
         /// Сгенерировать действие на воздействие(состояние среды)
         /// </summary>
         /// <param name="state"></param>
+        /// <param name="isRnd">вероятностный подход</param>
         /// <returns></returns>
-        public Action GetAction(State state, bool IsRnd = true)
+        public Action GetAction(State state, bool isRnd = true)
         {
             if(!(model.Layers.Last() is FeedForwardLayer))
             {
@@ -106,7 +107,7 @@ namespace PolicyGradient
                 var output = model.Activate(input, graphForward);
                 var vector = new Vector(output.DataInTensor);
 
-                return new Action(vector, random, IsRnd);
+                return new Action(vector, random, isRnd);
             }
 
         }
